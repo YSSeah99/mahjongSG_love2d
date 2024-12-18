@@ -30,7 +30,7 @@ function rightAIDiscardState:enter(params)
     self.flowerDeckCounter = #self.rightFlowerWall
     self.flowerinHand = 0
 
-    self.playerDiscardedTiles, self.rightDiscardedTiles, self.oppoDiscardedTiles, self.leftDiscardedTiles = params.discardedTiles[1], params.discardedTiles[1], params.discardedTiles[1], params.discardedTiles[1]
+    self.playerDiscardedTiles, self.rightDiscardedTiles, self.oppoDiscardedTiles, self.leftDiscardedTiles = params.discardedTiles[1], params.discardedTiles[2], params.discardedTiles[3], params.discardedTiles[4]
 
     -- assign pos in rightHand after it is sorted
     for pos = 1, #self.rightHand do
@@ -76,6 +76,7 @@ function rightAIDiscardState:enter(params)
             tiletobeDiscarded.position = #self.rightDiscardedTiles + 1
 
             table.insert(self.rightDiscardedTiles, tiletobeDiscarded)
+            print(#self.rightDiscardedTiles)
             
             -- readjust rightHand
             table.remove(self.rightHand, self.randomPosn)
@@ -84,7 +85,7 @@ function rightAIDiscardState:enter(params)
                 self.rightHand[pos].position = pos
             end
 
-            if #self.rightDiscardedTiles == supposedDiscarded then
+            if #self.rightDiscardedTiles == supposedDiscarded and #self.rightHand == 13 then
                 gSounds['tile-discard']:play()
                 gStateMachine:change('playerDraw',
                 {
@@ -104,63 +105,6 @@ end
 
 function rightAIDiscardState:update(dt)
 
-    print(dump(self.rightDiscardedTiles))
-
-    if self.selected_y == 2 then
-        rightmost_x_counter = 15
-    elseif self.selected_y == 1 or self.selected_y == 3 then
-        rightmost_x_counter = 2
-    end
-
-    -- left and right to select the tile
-    if love.keyboard.wasPressed('left') or love.keyboard.wasPressed('a') then
-        --gSounds['']:play()
-        self.selected_x = math.max(0, self.selected_x - 1)
-        if self.selected_x == 0 then self.selected_x = (rightmost_x_counter - 1) end
-        
-    end
-    
-    if love.keyboard.wasPressed('right') or love.keyboard.wasPressed('d') then
-        --gSounds['']:play()
-        self.selected_x = math.min(rightmost_x_counter, self.selected_x + 1)
-        if self.selected_x == rightmost_x_counter then self.selected_x = 1 end
-        
-    end
-
-    if love.keyboard.wasPressed('up') or love.keyboard.wasPressed('w') then
-        --gSounds['']:play()
-        self.selected_y = math.max(0, self.selected_y - 1)
-        if self.selected_y == 0 then self.selected_y = 3 end
-
-        if self.selected_y == 2 then
-            if self.selected_x == 2 then
-                self.selected_x = 4
-            elseif self.selected_x == 3 then
-                self.selected_x = 8
-            elseif self.selected_x == 4 then
-                self.selected_x = 11
-            elseif self.selected_x == 5 then
-                self.selected_x = 13
-            end
-        elseif self.selected_y == 1 or self.selected_y == 3 then
-            self.selected_x = 1
-        end
-        
-    end
-
-    if love.keyboard.wasPressed('down') or love.keyboard.wasPressed('s') then
-        --gSounds['']:play()
-        self.selected_y = math.min(4, self.selected_y + 1)
-        if self.selected_y == 4 then self.selected_y = 1 end
-
-        if self.selected_y == 2 then
-            self.selected_x = 13
-        elseif self.selected_y == 1 or self.selected_y == 3 then
-            self.selected_x = 1
-        end
-        
-    end
-    
     -- draw tile
     if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
     end 
@@ -179,7 +123,7 @@ function rightAIDiscardState:render()
     for p = 1, #self.playerHand do
         self.playerHand[p]:render()
     end
-    
+
     if #self.playerFlowerWall ~= 0 then
         for q = 1, #self.playerFlowerWall do
             self.playerFlowerWall[q]:render()

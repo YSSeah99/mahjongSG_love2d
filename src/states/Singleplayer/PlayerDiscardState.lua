@@ -12,10 +12,8 @@ PlayerDiscardState = Class{__includes = BaseState}
 
 function PlayerDiscardState:init(tileColor, jokerstring, drawWall, hands, flowerWalls, discardedTiles)
     
-    self.selected_x = 14
-    self.selected_y = 2
-
     self.menu = playerGUI({0, 0, 0, 0, 0})
+    self.selectionBox = selectionBox(14, 2, {14, 1})
 
 end
 
@@ -31,7 +29,7 @@ function PlayerDiscardState:enter(params)
     self.flowerDeckCounter = #self.playerFlowerWall
     self.flowerinHand = 0
 
-    self.playerDiscardedTiles, self.rightDiscardedTiles, self.oppoDiscardedTiles, self.leftDiscardedTiles = params.discardedTiles[1], params.discardedTiles[1], params.discardedTiles[1], params.discardedTiles[1]
+    self.playerDiscardedTiles, self.rightDiscardedTiles, self.oppoDiscardedTiles, self.leftDiscardedTiles = params.discardedTiles[1], params.discardedTiles[2], params.discardedTiles[3], params.discardedTiles[4]
 
     -- assign pos in playerHand after it is sorted
     for pos = 1, #self.playerHand do
@@ -67,72 +65,22 @@ end
 
 function PlayerDiscardState:update(dt)
 
-    if self.selected_y == 2 then
-        rightmost_x_counter = 15
-    elseif self.selected_y == 1 or self.selected_y == 3 then
-        rightmost_x_counter = 2
-    end
+    self.selectionBox:update(dt)
 
-    -- left and right to select the tile
-    if love.keyboard.wasPressed('left') or love.keyboard.wasPressed('a') then
-        --gSounds['']:play()
-        self.selected_x = math.max(0, self.selected_x - 1)
-        if self.selected_x == 0 then self.selected_x = (rightmost_x_counter - 1) end
-        
-    end
-    
-    if love.keyboard.wasPressed('right') or love.keyboard.wasPressed('d') then
-        --gSounds['']:play()
-        self.selected_x = math.min(rightmost_x_counter, self.selected_x + 1)
-        if self.selected_x == rightmost_x_counter then self.selected_x = 1 end
-        
-    end
-
-    if love.keyboard.wasPressed('up') or love.keyboard.wasPressed('w') then
-        --gSounds['']:play()
-        self.selected_y = math.max(0, self.selected_y - 1)
-        if self.selected_y == 0 then self.selected_y = 3 end
-
-        if self.selected_y == 2 then
-            if self.selected_x == 2 then
-                self.selected_x = 4
-            elseif self.selected_x == 3 then
-                self.selected_x = 8
-            elseif self.selected_x == 4 then
-                self.selected_x = 11
-            elseif self.selected_x == 5 then
-                self.selected_x = 13
-            end
-        elseif self.selected_y == 1 or self.selected_y == 3 then
-            self.selected_x = 1
-        end
-        
-    end
-
-    if love.keyboard.wasPressed('down') or love.keyboard.wasPressed('s') then
-        --gSounds['']:play()
-        self.selected_y = math.min(4, self.selected_y + 1)
-        if self.selected_y == 4 then self.selected_y = 1 end
-
-        if self.selected_y == 2 then
-            self.selected_x = 13
-        elseif self.selected_y == 1 or self.selected_y == 3 then
-            self.selected_x = 1
-        end
-        
-    end
-    
     -- draw tile
     if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
-        gSounds['tile-discard']:play()
-        if self.selected_y == 2 then
-            local tiletobeDiscarded = self.playerHand[self.selected_x]
+        
+        local x_pos, y_pos = self.selectionBox:returnCords()
+
+        if y_pos == 2 then
+            gSounds['tile-discard']:play()
+            local tiletobeDiscarded = self.playerHand[x_pos]
             tiletobeDiscarded.area = 3
             tiletobeDiscarded.position = #self.playerDiscardedTiles + 1
             table.insert(self.playerDiscardedTiles, tiletobeDiscarded)
             
             -- re-adjust playerHand
-            table.remove(self.playerHand, self.selected_x)
+            table.remove(self.playerHand, x_pos)
 
             -- remove any playerHand's bonus tiles into self.playerFlowerWall
             local tilesToDelete = {}
@@ -182,6 +130,7 @@ function PlayerDiscardState:render()
     end
 
     self.menu:render()
+    self.selectionBox:render()
 
     if #self.playerFlowerWall ~= 0 then
         for q = 1, #self.playerFlowerWall do
@@ -193,34 +142,6 @@ function PlayerDiscardState:render()
     -- Debugging Code
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.printf(#self.rightHand, VIRTUAL_WIDTH * 0.8, VIRTUAL_HEIGHT * 0.5, VIRTUAL_WIDTH * 0.9, "left")
-    love.graphics.setColor(1, 1, 1, 1)
-
-    -- if tile is selected, it will be highlighted with a red border
-    if self.selected_y == 1 then 
-        love.graphics.setLineWidth(2)
-        love.graphics.setColor(189/255, 44/255, 32/255, 1)
-        love.graphics.rectangle('line', 
-        VIRTUAL_WIDTH * 0.8, VIRTUAL_HEIGHT * 0.1, 
-        TOP_PANEL_WIDTH, TOP_PANEL_HEIGHT)
-    
-    elseif self.selected_y == 2 then
-        love.graphics.setLineWidth(2)
-        love.graphics.setColor(189/255, 44/255, 32/255, 1)
-        love.graphics.rectangle('line', 
-        HandPosn[self.selected_x],
-        VIRTUAL_HEIGHT * 0.74, 
-        TILE_WIDTH, TILE_HEIGHT)
-        
-    elseif self.selected_y == 3 then
-        love.graphics.setLineWidth(2)
-        love.graphics.setColor(189/255, 44/255, 32/255, 1)
-        love.graphics.rectangle('line', 
-        bottomPanelPosn[self.selected_x],
-        VIRTUAL_HEIGHT * 0.9, 
-        BOTTOM_PANEL_WIDTH, BOTTOM_PANEL_HEIGHT)
-    end
-
-    -- reset the color
     love.graphics.setColor(1, 1, 1, 1)
 
 end

@@ -17,6 +17,7 @@ require 'src/components/deck'
 
 require 'src/gui/Panel'
 require 'src/gui/playerGUI'
+require 'src/gui/selection_box'
 
 require 'src/states/BaseState'
 require 'src/states/MenuState'
