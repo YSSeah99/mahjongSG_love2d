@@ -22,10 +22,10 @@ function DiceRollingState:enter(params)
     self.roundDeck = Set(self.jokerstring, self.tileColor)
     self.hands, self.drawWall = self.roundDeck:deal()
 
-    self.playerDeck = Deck(self.hands[1], {})
-    self.rightAIDeck = Deck(self.hands[2], {})
-    self.oppoAIDeck = Deck(self.hands[3], {})
-    self.leftAIDeck = Deck(self.hands[4], {})
+    self.playerDeck = Deck(self.hands[1], {}, {1, 2, 3})
+    self.rightAIDeck = Deck(self.hands[2], {}, {4, 5, 6})
+    self.oppoAIDeck = Deck(self.hands[3], {}, {7, 8, 9})
+    self.leftAIDeck = Deck(self.hands[4], {}, {10, 11, 12})
 
 end
 
