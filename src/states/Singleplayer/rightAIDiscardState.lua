@@ -76,7 +76,6 @@ function rightAIDiscardState:enter(params)
             tiletobeDiscarded.position = #self.rightDiscardedTiles + 1
 
             table.insert(self.rightDiscardedTiles, tiletobeDiscarded)
-            print(#self.rightDiscardedTiles)
             
             -- readjust rightHand
             table.remove(self.rightHand, self.randomPosn)
@@ -120,20 +119,8 @@ function rightAIDiscardState:render()
         VIRTUAL_WIDTH / gTextures['background']:getWidth(),
         VIRTUAL_HEIGHT / gTextures['background']:getHeight())
 
-    for p = 1, #self.playerHand do
-        self.playerHand[p]:render()
-    end
-
-    if #self.playerFlowerWall ~= 0 then
-        for q = 1, #self.playerFlowerWall do
-            self.playerFlowerWall[q]:render()
-        end
-    end
-
-    -- Temp Code
-    love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.printf(#self.rightHand, VIRTUAL_WIDTH * 0.8, VIRTUAL_HEIGHT * 0.5, VIRTUAL_WIDTH * 0.9, "left")
-    love.graphics.setColor(1, 1, 1, 1)
+    playerHandGUI(self.playerHand, self.playerFlowerWall):render()
+    AIHandGUI(self.rightHand, self.oppoHand, self.leftHand):render()
 
     self.menu:render()
 

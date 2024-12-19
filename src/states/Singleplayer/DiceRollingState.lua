@@ -9,10 +9,6 @@ DiceRollingState = Class{__includes = BaseState}
 
 function DiceRollingState:init(playerRoll, tileColor, jokerstring)
     
-    self.diceAnimation = Animation {
-        frames = {1, 2, 3, 4, 5, 6},
-        interval = 0.1
-    }
     self.diceAnimationTrigger = true
     
 end
@@ -22,13 +18,18 @@ function DiceRollingState:enter(params)
     self.playerRoll = params.playerRoll
     self.tileColor = params.tileColor
     self.jokerstring = params.jokerstring
-    self.roundDeck = Deck(self.jokerstring, self.tileColor)
-    self.hands, self.drawWall = self.roundDeck:deal()
     
+    self.roundDeck = Set(self.jokerstring, self.tileColor)
+    self.hands, self.drawWall = self.roundDeck:deal()
+
+    self.playerDeck = Deck(self.hands[1], {})
+    self.rightAIDeck = Deck(self.hands[2], {})
+    self.oppoAIDeck = Deck(self.hands[3], {})
+    self.leftAIDeck = Deck(self.hands[4], {})
+
 end
 
 function DiceRollingState:update(dt)
-    self.diceAnimation:update(dt)
 
     if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
         self.diceAnimationTrigger = not self.diceAnimationTrigger
@@ -55,7 +56,7 @@ function DiceRollingState:render()
 
         -- 1st dice
         love.graphics.draw(gTextures['dice'], 
-        gFrames['dice'][self.diceAnimation:getCurrentFrame()],
+        gFrames['dice'][math.random(6)],
         VIRTUAL_WIDTH / 2 - DICE_WIDTH / 4 * 3 - DICE_WIDTH,  
         VIRTUAL_HEIGHT / 2 - DICE_HEIGHT / 2,  
         0, 
@@ -64,7 +65,7 @@ function DiceRollingState:render()
         
         -- middle dice (or 2nd)
         love.graphics.draw(gTextures['dice'], 
-        gFrames['dice'][self.diceAnimation:getCurrentFrame()],
+        gFrames['dice'][math.random(6)],
         VIRTUAL_WIDTH / 2 - DICE_WIDTH / 4 * 3,  
         VIRTUAL_HEIGHT / 2 - DICE_HEIGHT / 2,  
         0, 
@@ -73,7 +74,7 @@ function DiceRollingState:render()
 
         -- third dice
         love.graphics.draw(gTextures['dice'], 
-        gFrames['dice'][self.diceAnimation:getCurrentFrame()],
+        gFrames['dice'][math.random(6)],
         VIRTUAL_WIDTH / 2 - DICE_WIDTH / 4 * 3 + DICE_WIDTH,  
         VIRTUAL_HEIGHT / 2 - DICE_HEIGHT / 2,  
         0, 
@@ -125,8 +126,7 @@ function DiceRollingState:render()
                 tileColor = self.tileColor,
                 jokerstring = self.jokerstring,
                 drawWall = self.drawWall,
-                hands = self.hands,
-                flowerWalls = {{}, {}, {}, {}},
+                decks = {self.playerDeck, self.rightAIDeck, self.oppoAIDeck, self.leftAIDeck},
                 discardedTiles = {{}, {}, {}, {}}
             })
         end)

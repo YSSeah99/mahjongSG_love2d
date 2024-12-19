@@ -14,9 +14,12 @@ require 'src/Util'
 
 require 'src/components/tile'
 require 'src/components/deck'
+require 'src/components/set'
 
 require 'src/gui/Panel'
 require 'src/gui/playerGUI'
+require 'src/gui/playerHandGUI'
+require 'src/gui/AIHandGUI'
 require 'src/gui/selection_box'
 
 require 'src/states/BaseState'

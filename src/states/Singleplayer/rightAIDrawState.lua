@@ -73,22 +73,10 @@ function rightAIDrawState:render()
         VIRTUAL_WIDTH / gTextures['background']:getWidth(),
         VIRTUAL_HEIGHT / gTextures['background']:getHeight())
 
-    for p = 1, #self.playerHand do
-        self.playerHand[p]:render()
-    end
+    playerHandGUI(self.playerHand, self.playerFlowerWall):render()
+    AIHandGUI(self.rightHand, self.oppoHand, self.leftHand):render()
 
     self.menu:render()
-
-    if #self.playerFlowerWall ~= 0 then
-        for q = 1, #self.playerFlowerWall do
-            self.playerFlowerWall[q]:render()
-        end
-    end
-
-    -- Debugging Code
-    love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.printf(#self.rightHand, VIRTUAL_WIDTH * 0.8, VIRTUAL_HEIGHT * 0.5, VIRTUAL_WIDTH * 0.9, "left")
-    love.graphics.setColor(1, 1, 1, 1)
 
     Timer.after(1, function()
     
@@ -105,8 +93,6 @@ function rightAIDrawState:render()
                 table.remove(self.rightHand, tilesToDelete[#tilesToDelete - pos + 1])
             end
         end
-
-        print(#self.rightDiscardedTiles)
 
         gStateMachine:change('rightAIDiscard',
         {
