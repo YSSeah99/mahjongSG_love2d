@@ -29,6 +29,10 @@ function love.load()
         ['playerDiscard'] = function() return PlayerDiscardState() end,
         ['rightAIDraw'] = function() return rightAIDrawState() end,
         ['rightAIDiscard'] = function() return rightAIDiscardState() end,
+        ['oppoAIDraw'] = function() return oppoAIDrawState() end,
+        ['oppoAIDiscard'] = function() return oppoAIDiscardState() end,
+        ['leftAIDraw'] = function() return leftAIDrawState() end,
+        ['leftAIDiscard'] = function() return leftAIDiscardState() end,
     }
     gStateMachine:change('setting')
 

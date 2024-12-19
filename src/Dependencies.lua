@@ -32,8 +32,14 @@ require 'src/states/Singleplayer/DiceRollingState'
 require 'src/states/Singleplayer/PlayerDrawState'
 require 'src/states/Singleplayer/PlayerDiscardState'
 
-require 'src/states/Singleplayer/rightAIDrawState'
-require 'src/states/Singleplayer/rightAIDiscardState'
+require 'src/states/AIStates/RightAI/rightAIDrawState'
+require 'src/states/AIStates/RightAI/rightAIDiscardState'
+
+require 'src/states/AIStates/OppoAI/oppoAIDrawState'
+require 'src/states/AIStates/OppoAI/oppoAIDiscardState'
+
+require 'src/states/AIStates/LeftAI/leftAIDrawState'
+require 'src/states/AIStates/LeftAI/leftAIDiscardState'
 
 gTextures = {
     ['background'] = love.graphics.newImage('graphics/mahjong_background.png'),
