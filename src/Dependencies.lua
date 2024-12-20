@@ -67,5 +67,9 @@ gSounds = {
     ['tile-draw'] = love.audio.newSource('sounds/DrawTiles.ogg', 'static'),
     ['tile-discard'] = love.audio.newSource('sounds/DiscardTile.ogg', 'static'),
     ['bell'] = love.audio.newSource('sounds/Bell.wav', 'static'),
+    ['chi'] = love.audio.newSource('sounds/actions/chi.ogg', 'static'),
+    ['pong'] = love.audio.newSource('sounds/actions/pong.ogg', 'static'),
+    ['kang'] = love.audio.newSource('sounds/actions/kang.ogg', 'static'),
+    ['fu'] = love.audio.newSource('sounds/actions/fu.ogg', 'static'),
     ['discardedTileNames'] = GenerateBits(34)
 }
