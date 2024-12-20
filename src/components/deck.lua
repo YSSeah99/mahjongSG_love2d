@@ -12,12 +12,14 @@ function Deck:init(hands, flowerWall, areas)
     self.areas = areas
 
     self.needtoDraw = false
+    self.canPong = false
+    self.canKang = false
 
 end
 
 function Deck:update(dt)
 
-    self:flowerCheck()
+    self:checkFlower()
     self:sortThirteen()
     
 end
@@ -40,7 +42,7 @@ function Deck:sortThirteen()
 
 end
 
-function Deck:flowerCheck()
+function Deck:checkFlower()
 
     -- assign any bonus tile to playerFlowerHand
     local tilesToRemove = {}
@@ -69,7 +71,7 @@ function Deck:drawTile(draws)
         draws[1].position = 14
         table.insert(self.hands, draws[1])
         table.remove(draws, 1)
-        self:flowerCheck()
+        self:checkFlower()
     end
 
 end
@@ -90,6 +92,22 @@ function Deck:discardTile(posi, trash)
 
         self:sortThirteen()
 
+    end
+
+end
+
+function Deck:checkPongKang(discardedTile)
+
+    if (#self.hands == 13) and (discardedTile.id < 34) then
+        count = 0
+        for i = 1, #self.hands do
+            if (self.hands[i].id == discardedTile.id) then 
+                count = count + 1 
+            end
+        end
+
+        if count == 2 then self.canPong = true elseif count == 3 then self.canKang = true end
+            
     end
 
 end

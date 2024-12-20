@@ -29,6 +29,26 @@ function GenerateQuads(atlas, tilewidth, tileheight)
     return spritesheet
 end
 
+function GenerateBits(cuts)
+    local tracks = cuts
+
+    local audiosheet = {}
+
+    for id = 1, tracks do
+        audiosheet[id] = love.audio.newSource('sounds/discardTileNames/' .. tostring(id) .. '.ogg', 'static')
+    end
+
+    return audiosheet
+end
+
+function playDiscardTile(playerTrash)
+
+    gSounds['discardedTileNames'][playerTrash[#playerTrash].id]:play()
+        Timer.after(gSounds['discardedTileNames'][playerTrash[#playerTrash].id]:getDuration(), function()
+            gSounds['discardedTileNames'][playerTrash[#playerTrash].id]:stop() end)
+
+end
+
 -- for dumping values of table (printing ONLY)
 function dump(o)
     if type(o) == 'table' then

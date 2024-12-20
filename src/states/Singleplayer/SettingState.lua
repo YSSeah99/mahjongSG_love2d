@@ -12,6 +12,7 @@ function SettingState:init()
     highlighted = 0 -- to update to 1 before gamelaunch
     
     settingWidth, settingHeight = VIRTUAL_WIDTH / 4 + 10, VIRTUAL_HEIGHT / 2 + 10
+
 end
 
 function SettingState:update(dt)

@@ -33,6 +33,7 @@ function oppoAIDiscardState:enter(params)
 
         x_pos = math.random(1, 14)
         self.oppoAIDeck:discardTile(x_pos, self.oppoDiscardedTiles)
+        self.playerDeck:checkPongKang(self.oppoDiscardedTiles[#self.oppoDiscardedTiles])
         gStateMachine:change('leftAIDraw',
         {
             tileColor = self.tileColor,

@@ -66,4 +66,6 @@ gFonts = {
 gSounds = {
     ['tile-draw'] = love.audio.newSource('sounds/DrawTiles.ogg', 'static'),
     ['tile-discard'] = love.audio.newSource('sounds/DiscardTile.ogg', 'static'),
+    ['bell'] = love.audio.newSource('sounds/Bell.wav', 'static'),
+    ['discardedTileNames'] = GenerateBits(34)
 }

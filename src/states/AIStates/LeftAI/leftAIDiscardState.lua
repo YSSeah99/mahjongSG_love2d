@@ -33,6 +33,8 @@ function leftAIDiscardState:enter(params)
 
         x_pos = math.random(1, 14)
         self.leftAIDeck:discardTile(x_pos, self.leftDiscardedTiles)
+        gSounds['discardedTileNames'][self.leftDiscardedTiles[#self.leftDiscardedTiles].id]:play()
+        self.playerDeck:checkPongKang(self.leftDiscardedTiles[#self.leftDiscardedTiles])
         gStateMachine:change('playerDraw',
         {
             tileColor = self.tileColor,
