@@ -1,6 +1,8 @@
 --[[
     Mahjong SEA
     Includes Hands and FlowerWall - BackEnd
+
+    Does the checks
 ]]
 
 Deck = Class{}
@@ -98,7 +100,7 @@ end
 
 function Deck:checkPongKang(discardedTile)
 
-    if (#self.hands == 13) and (discardedTile.id < 34) then
+    if (#self.hands == 13) then
         count = 0
         for i = 1, #self.hands do
             if (self.hands[i].id == discardedTile.id) then 
@@ -106,7 +108,7 @@ function Deck:checkPongKang(discardedTile)
             end
         end
 
-        if count == 2 then self.canPong = true elseif count == 3 then self.canKang = true end
+        if count == 1 then self.canPong = true elseif count == 3 then self.canKang = true end -- to change count back to 2
             
     end
 

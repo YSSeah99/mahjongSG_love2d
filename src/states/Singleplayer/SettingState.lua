@@ -155,7 +155,7 @@ function SettingState:render()
         love.graphics.setColor(189/255, 44/255, 32/255, 1)
     end
     love.graphics.printf("Enter Game!", 0, VIRTUAL_HEIGHT * 0.68, VIRTUAL_WIDTH, 'center')
-        
+
     -- reset the color
     love.graphics.setColor(1, 1, 1, 1)
 end

@@ -13,6 +13,7 @@ rightAIDiscardState = Class{__includes = BaseState}
 function rightAIDiscardState:init(tileColor, jokerstring, drawWall, decks, discardedTiles)
     
     self.menu = playerGUI({0, 0, 0, 0, 0})
+    
 
 end
 
@@ -27,36 +28,19 @@ function rightAIDiscardState:enter(params)
     self.playerDeck, self.rightAIDeck, self.oppoAIDeck, self.leftAIDeck = params.decks[1], params.decks[2], params.decks[3], params.decks[4]
     self.playerDiscardedTiles, self.rightDiscardedTiles, self.oppoDiscardedTiles, self.leftDiscardedTiles = params.discardedTiles[1], params.discardedTiles[2], params.discardedTiles[3], params.discardedTiles[4]
 
-    -- draws tile until playerHand = 14
-    
-    Timer.after(1, function()
+    self.rightAIBehaviour = AIBehaviour('right', self.rightAIDeck, self.rightDiscardedTiles, params.decks, params.discardedTiles)
 
-        x_pos = math.random(1, 14)
-        self.rightAIDeck:discardTile(x_pos, self.rightDiscardedTiles)
-
-        playDiscardTile(self.rightDiscardedTiles)
-
-        self.playerDeck:checkPongKang(self.rightDiscardedTiles[#self.rightDiscardedTiles])
-        --if self.playerDeck.canPong then
-            
-        --end
-        gStateMachine:change('oppoAIDraw',
-        {
-            tileColor = self.tileColor,
-            jokerstring = self.jokerstring,
-            drawWall = self.drawWall,
-            decks = {self.playerDeck, self.rightAIDeck, self.oppoAIDeck, self.leftAIDeck},
-            discardedTiles = {self.playerDiscardedTiles, self.rightDiscardedTiles, self.oppoDiscardedTiles, self.leftDiscardedTiles}
-        })
-
-
-    end)
+    self.countdown = Countdown(5, 'false')
 
 end
 
 function rightAIDiscardState:update(dt)
 
     self.rightAIDeck:update(dt)
+    self.rightAIBehaviour:update(dt)
+
+    self.countdown:update(dt)
+
     -- draw tile
     if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
     end 
@@ -76,6 +60,68 @@ function rightAIDiscardState:render()
     AIHandGUI(self.rightAIDeck.hands, self.oppoAIDeck.hands, self.leftAIDeck.hands):render()
 
     self.menu:render()
+
+    Timer.after(1, function()
+
+        -- discard one tile
+        x_pos = self.rightAIBehaviour:determineTiletoDiscard()
+        self.rightAIDeck:discardTile(x_pos, self.rightDiscardedTiles)
+        playDiscardTile(self.rightDiscardedTiles)
+        local discardedTile = self.rightDiscardedTiles[#self.rightDiscardedTiles]
+
+        self.playerchoiceGUI = playerchoiceGUI(discardedTile, self.playerDeck)
+
+        self.playerDeck:checkPongKang(discardedTile)
+
+        -- Checks After Right AI Discard
+        -- 1. If OppoAI can win 
+        -- 2. If LeftAI can win
+        -- 3. If Player can win
+        -- 4. If OppoAI can pong
+        -- 5. If LeftAI can pong
+        -- 6. If Player can pong
+        if self.playerDeck.canPong then
+            gSounds['bell']:play()
+            Timer.after(gSounds['bell']:getDuration(), function() 
+                self.menu["PongUI"]["available"] = 1
+                selectionBox(3, 3, {1, 1}, 1):render()
+                self.countdown.visible = true
+            end)
+            
+            if self.countdown.seconds == 0 then
+                self.countdown.visible = false
+                self.menu["PongUI"]["available"] = 0
+                self.playerDeck.canPong = not self.playerDeck.canPong
+                self.rightAIBehaviour:goDrawState(self.tileColor, self.jokerstring, self.drawWall, {self.playerDeck, self.rightAIDeck, self.oppoAIDeck, self.leftAIDeck}, {self.playerDiscardedTiles, self.rightDiscardedTiles, self.oppoDiscardedTiles, self.leftDiscardedTiles}) 
+            end
+        -- 7. If OppoAI can chi
+        -- 8. RightAi discards goes to OppoAIDrawState
+        else
+            
+            self.rightAIBehaviour:goDrawState(self.tileColor, self.jokerstring, self.drawWall, {self.playerDeck, self.rightAIDeck, self.oppoAIDeck, self.leftAIDeck}, {self.playerDiscardedTiles, self.rightDiscardedTiles, self.oppoDiscardedTiles, self.leftDiscardedTiles})
+
+        end
+
+    
+
+        --[[if self.playerDeck.canPong then
+            
+            love.graphics.setFont(gFonts['medium'])
+            love.graphics.setColor(1, 1, 1, 1)
+            local seconds = 3
+                love.graphics.printf(tostring(seconds), VIRTUAL_WIDTH * 0.5, VIRTUAL_HEIGHT * 0.5, VIRTUAL_WIDTH * 0.5, "left")
+            
+
+        else]]--
+
+            
+        --end
+
+    end)
+
+    if self.countdown.visible then
+        self.countdown:render()
+    end
 
     -- reset the color
     love.graphics.setColor(1, 1, 1, 1)
