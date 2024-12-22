@@ -30,6 +30,8 @@ function Tile:init(def)
     self.animal = def.animal or nil
     self.animalPair = def.animalPair or nil
 
+    self.choice = def.choice or nil
+
 end
 
 function Tile:update(dt)
@@ -37,6 +39,8 @@ function Tile:update(dt)
 end
 
 function Tile:render()
+
+    love.graphics.setColor(1, 1, 1, 1)
 
     -- render playerHand
     if self.area == 1 then
@@ -73,6 +77,24 @@ function Tile:render()
         VIRTUAL_HEIGHT * 0.632, 
         0, 
         0.085, 0.085)  -- scaling for hand
+    
+    -- displays when pong
+    elseif self.choice == 2 then
+
+        love.graphics.draw(gTextures['tiles_colour'], 
+        gFrames['tiles_colour'][self.tile_colour[1]],
+        HandPosn[self.position],
+        VIRTUAL_HEIGHT * 0.44, 
+        0, 
+        0.18, 0.18) -- scaling for hand
+
+        -- draw pattern
+        love.graphics.draw(gTextures['tiles'], 
+        gFrames['tiles'][self.id],
+        HandPosn[self.position],
+        VIRTUAL_HEIGHT * 0.465, 
+        0, 
+        0.175, 0.175) 
 
     end
 

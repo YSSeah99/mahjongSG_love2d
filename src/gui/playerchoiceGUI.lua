@@ -5,26 +5,30 @@
 
 playerchoiceGUI = Class{}
 
-function playerchoiceGUI:init(discardTile, playerDeck)
-
-    self.discardTile = discardTile
-    self.playerDeck = playerDeck
-
+function playerchoiceGUI:init()
 
 end
 
 function playerchoiceGUI:update(dt)
 
-    self.playerDeck:checkPongKang(discardedTile)
-
 end
 
-function playerchoiceGUI:render()
+function playerchoiceGUI:render(input, discardedtile)
 
+    self.discardedTile = discardedtile
 
-    if self.playerDeck.canPong then
-        gSounds['bell']:play()
-        self.menu["PongUI"]["available"] = 1
+    -- 3 tiles (one option), position 7, 8 and 9 are good
+    if input == "Pong?" then
+
+        for i = 1, 3 do
+            Tile {
+                id = self.discardedTile.id,
+                tile_colour = self.discardedTile.tile_colour,
+                choice = 2,
+                position = i + 6
+            }:render()
+        end
+
     end
 
 end

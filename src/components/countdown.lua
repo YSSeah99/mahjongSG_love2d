@@ -23,9 +23,14 @@ function Countdown:update(dt)
 
 end
 
-function Countdown:render(input)
+function Countdown:render(input, discardedTile)
 
-    if self.visible then
+    self.discardedTile = discardedTile
+    print(self.discardedTile)
+
+    if self.visible and self.discardedTile ~= nil then
+
+        print("Yes")
 
         -- menu translucent rounded rectangle
         love.graphics.setColor(1, 1, 1, 0.25)
@@ -41,9 +46,7 @@ function Countdown:render(input)
         love.graphics.setColor(0, 0, 0, 1)
         love.graphics.printf(input, 0, VIRTUAL_HEIGHT * 0.352, VIRTUAL_WIDTH, "center")
 
-        if input == "Pong?" then 
-            print("Yeet") 
-        end
+        playerchoiceGUI:render(input, self.discardedTile)
 
     end
     

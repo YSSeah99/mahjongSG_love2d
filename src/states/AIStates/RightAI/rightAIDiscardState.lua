@@ -13,6 +13,7 @@ rightAIDiscardState = Class{__includes = BaseState}
 function rightAIDiscardState:init(tileColor, jokerstring, drawWall, decks, discardedTiles)
     
     self.menu = playerGUI({0, 0, 0, 0, 0})
+    self.discardedTile = nil
 
     self.selectionBoxforPlayerChi = selectionBox(2, 3, {1, 1}, 1)
     self.selectionBoxforPlayerPong = selectionBox(3, 3, {1, 1}, 1)
@@ -68,10 +69,10 @@ function rightAIDiscardState:render()
 
         if self.playerDeck.canPong then 
             self.selectionBoxforPlayerPong:render() 
-            self.countdown:render("Pong?")
+            self.countdown:render("Pong?", self.discardedTile)
         elseif self.playerDeck.canKang then 
             self.selectionBoxforPlayerKang:render() 
-            self.countdown:render("Kang?") 
+            self.countdown:render("Kang?", self.discardedTile) 
         end
 
     end
@@ -82,11 +83,9 @@ function rightAIDiscardState:render()
         x_pos = self.rightAIBehaviour:determineTiletoDiscard()
         self.rightAIDeck:discardTile(x_pos, self.rightDiscardedTiles)
         playDiscardTile(self.rightDiscardedTiles)
-        local discardedTile = self.rightDiscardedTiles[#self.rightDiscardedTiles]
+        self.discardedTile = self.rightDiscardedTiles[#self.rightDiscardedTiles]
 
-        self.playerchoiceGUI = playerchoiceGUI(discardedTile, self.playerDeck)
-
-        self.playerDeck:checkPongKang(discardedTile)
+        self.playerDeck:checkPongKang(self.discardedTile)
 
         -- Checks After Right AI Discard
         -- 1. If OppoAI can win 
