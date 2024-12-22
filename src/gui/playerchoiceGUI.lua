@@ -29,6 +29,18 @@ function playerchoiceGUI:render(input, discardedtile)
             }:render()
         end
 
+    -- 4 tiles (one option), position 6.5, 7.5, 8.5, 9.5 are good
+    elseif input == "Kang?" then
+
+        for i = 1, 4 do
+            Tile {
+                id = self.discardedTile.id,
+                tile_colour = self.discardedTile.tile_colour,
+                choice = 3,
+                position = i
+            }:render()
+        end
+
     end
 
 end

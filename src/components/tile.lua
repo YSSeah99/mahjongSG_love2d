@@ -96,6 +96,24 @@ function Tile:render()
         0, 
         0.175, 0.175) 
 
+    -- displays when kang
+    elseif self.choice == 3 then
+
+        love.graphics.draw(gTextures['tiles_colour'], 
+        gFrames['tiles_colour'][self.tile_colour[1]],
+        KangPosn[self.position],
+        VIRTUAL_HEIGHT * 0.44, 
+        0, 
+        0.18, 0.18) -- scaling for hand
+
+        -- draw pattern
+        love.graphics.draw(gTextures['tiles'], 
+        gFrames['tiles'][self.id],
+        KangPosn[self.position],
+        VIRTUAL_HEIGHT * 0.465, 
+        0, 
+        0.175, 0.175) 
+
     end
 
     -- tiles stack of 13

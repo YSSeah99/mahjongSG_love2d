@@ -26,11 +26,8 @@ end
 function Countdown:render(input, discardedTile)
 
     self.discardedTile = discardedTile
-    print(self.discardedTile)
 
     if self.visible and self.discardedTile ~= nil then
-
-        print("Yes")
 
         -- menu translucent rounded rectangle
         love.graphics.setColor(1, 1, 1, 0.25)

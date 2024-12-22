@@ -127,21 +127,6 @@ function rightAIDiscardState:render()
 
         end
 
-    
-
-        --[[if self.playerDeck.canPong then
-            
-            love.graphics.setFont(gFonts['medium'])
-            love.graphics.setColor(1, 1, 1, 1)
-            local seconds = 3
-                love.graphics.printf(tostring(seconds), VIRTUAL_WIDTH * 0.5, VIRTUAL_HEIGHT * 0.5, VIRTUAL_WIDTH * 0.5, "left")
-            
-
-        else]]--
-
-            
-        --end
-
     end)
 
     -- reset the color

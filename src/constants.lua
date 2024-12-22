@@ -32,6 +32,13 @@ for i = 0, 12 do
 end
 table.insert(HandPosn, VIRTUAL_WIDTH * 0.12 + (14 * TILE_WIDTH))
 
+-- generate KangPosn
+KangPosn = {}
+local halfDistance = TILE_WIDTH / 2
+for i = 5, 8 do
+    table.insert(KangPosn, VIRTUAL_WIDTH * 0.12 + (i * TILE_WIDTH) + halfDistance)
+end
+
 -- generate bottomPanelPosn
 bottomPanelPosn = {}
 local horizontalCounter = VIRTUAL_WIDTH * 0.5 / 6

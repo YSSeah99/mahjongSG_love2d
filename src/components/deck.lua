@@ -108,7 +108,7 @@ function Deck:checkPongKang(discardedTile)
             end
         end
 
-        if count == 1 then self.canPong = true elseif count == 3 then self.canKang = true end -- to change count back to 2
+        if count == 2 then self.canPong = true elseif count == 1 then self.canKang = true end -- to change count back to 2
             
     end
 
