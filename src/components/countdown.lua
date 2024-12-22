@@ -4,12 +4,12 @@
 
 Countdown = Class{}
 
-function Countdown:init(time, visible)
+function Countdown:init(time)
 
     self.seconds = time
     self.dt = 0
 
-    self.visible = visible
+    self.visible = 'false'
 
 end
 
@@ -23,17 +23,26 @@ function Countdown:update(dt)
 
 end
 
-function Countdown:render()
+function Countdown:render(input)
 
     if self.visible then
 
-        love.graphics.setColor(0, 0, 0, 1)
+        -- menu translucent rounded rectangle
+        love.graphics.setColor(1, 1, 1, 0.25)
+        love.graphics.rectangle("fill", VIRTUAL_WIDTH * 0.35, VIRTUAL_HEIGHT * 0.35, VIRTUAL_WIDTH * 0.3, VIRTUAL_HEIGHT * 0.3, 5, 5) 
+
+        love.graphics.setColor(189/255, 44/255, 32/255, 1)
         love.graphics.setFont(gFonts['medium'])
 
         if self.seconds >= 0 then
-            love.graphics.printf(self.seconds, VIRTUAL_WIDTH * 0.5, VIRTUAL_HEIGHT * 0.5, VIRTUAL_WIDTH * 0.5, "left")
-        else
-            love.graphics.printf("Yeet", VIRTUAL_WIDTH * 0.5, VIRTUAL_HEIGHT * 0.5, VIRTUAL_WIDTH * 0.5, "left")
+            love.graphics.printf(self.seconds, 0, VIRTUAL_HEIGHT * 0.58, VIRTUAL_WIDTH, "center")
+        end
+
+        love.graphics.setColor(0, 0, 0, 1)
+        love.graphics.printf(input, 0, VIRTUAL_HEIGHT * 0.352, VIRTUAL_WIDTH, "center")
+
+        if input == "Pong?" then 
+            print("Yeet") 
         end
 
     end

@@ -13,8 +13,12 @@ rightAIDiscardState = Class{__includes = BaseState}
 function rightAIDiscardState:init(tileColor, jokerstring, drawWall, decks, discardedTiles)
     
     self.menu = playerGUI({0, 0, 0, 0, 0})
-    
 
+    self.selectionBoxforPlayerChi = selectionBox(2, 3, {1, 1}, 1)
+    self.selectionBoxforPlayerPong = selectionBox(3, 3, {1, 1}, 1)
+    self.selectionBoxforPlayerKang = selectionBox(4, 3, {1, 1}, 1)
+    self.selectionBoxforPlayerWin = selectionBox(5, 3, {1, 1}, 1)
+    
 end
 
 function rightAIDiscardState:enter(params)
@@ -30,15 +34,13 @@ function rightAIDiscardState:enter(params)
 
     self.rightAIBehaviour = AIBehaviour('right', self.rightAIDeck, self.rightDiscardedTiles, params.decks, params.discardedTiles)
 
-    self.countdown = Countdown(5, 'false')
+    self.countdown = Countdown(6)
 
 end
 
 function rightAIDiscardState:update(dt)
 
-    self.rightAIDeck:update(dt)
     self.rightAIBehaviour:update(dt)
-
     self.countdown:update(dt)
 
     -- draw tile
@@ -61,6 +63,19 @@ function rightAIDiscardState:render()
 
     self.menu:render()
 
+    -- renders countdown timer and selectionmenu
+    if self.countdown.visible == true then
+
+        if self.playerDeck.canPong then 
+            self.selectionBoxforPlayerPong:render() 
+            self.countdown:render("Pong?")
+        elseif self.playerDeck.canKang then 
+            self.selectionBoxforPlayerKang:render() 
+            self.countdown:render("Kang?") 
+        end
+
+    end
+
     Timer.after(1, function()
 
         -- discard one tile
@@ -77,21 +92,32 @@ function rightAIDiscardState:render()
         -- 1. If OppoAI can win 
         -- 2. If LeftAI can win
         -- 3. If Player can win
-        -- 4. If OppoAI can pong
-        -- 5. If LeftAI can pong
-        -- 6. If Player can pong
+        -- 4. If OppoAI can pong / kang
+        -- 5. If LeftAI can pong / kang
+        -- 6. If Player can pong / kang
         if self.playerDeck.canPong then
+
             gSounds['bell']:play()
-            Timer.after(gSounds['bell']:getDuration(), function() 
-                self.menu["PongUI"]["available"] = 1
-                selectionBox(3, 3, {1, 1}, 1):render()
-                self.countdown.visible = true
-            end)
-            
+            self.menu["PongUI"]["available"] = 1
+            self.countdown.visible = true
+
             if self.countdown.seconds == 0 then
                 self.countdown.visible = false
                 self.menu["PongUI"]["available"] = 0
                 self.playerDeck.canPong = not self.playerDeck.canPong
+                self.rightAIBehaviour:goDrawState(self.tileColor, self.jokerstring, self.drawWall, {self.playerDeck, self.rightAIDeck, self.oppoAIDeck, self.leftAIDeck}, {self.playerDiscardedTiles, self.rightDiscardedTiles, self.oppoDiscardedTiles, self.leftDiscardedTiles}) 
+            end
+
+        elseif self.playerDeck.canKang then
+
+            gSounds['bell']:play()
+            self.menu["KangUI"]["available"] = 1
+            self.countdown.visible = true
+
+            if self.countdown.seconds == 0 then
+                self.countdown.visible = false
+                self.menu["KangUI"]["available"] = 0
+                self.playerDeck.canKang = not self.playerDeck.canKang
                 self.rightAIBehaviour:goDrawState(self.tileColor, self.jokerstring, self.drawWall, {self.playerDeck, self.rightAIDeck, self.oppoAIDeck, self.leftAIDeck}, {self.playerDiscardedTiles, self.rightDiscardedTiles, self.oppoDiscardedTiles, self.leftDiscardedTiles}) 
             end
         -- 7. If OppoAI can chi
@@ -118,10 +144,6 @@ function rightAIDiscardState:render()
         --end
 
     end)
-
-    if self.countdown.visible then
-        self.countdown:render()
-    end
 
     -- reset the color
     love.graphics.setColor(1, 1, 1, 1)

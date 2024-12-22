@@ -14,6 +14,11 @@ function oppoAIDiscardState:init(tileColor, jokerstring, drawWall, decks, discar
     
     self.menu = playerGUI({0, 0, 0, 0, 0})
 
+    self.selectionBoxforPlayerChi = selectionBox(2, 3, {1, 1}, 1)
+    self.selectionBoxforPlayerPong = selectionBox(3, 3, {1, 1}, 1)
+    self.selectionBoxforPlayerKang = selectionBox(4, 3, {1, 1}, 1)
+    self.selectionBoxforPlayerWin = selectionBox(5, 3, {1, 1}, 1)
+
 end
 
 function oppoAIDiscardState:enter(params)
@@ -29,24 +34,14 @@ function oppoAIDiscardState:enter(params)
 
     self.oppoAIBehaviour = AIBehaviour('oppo', self.oppoAIDeck, self.oppoDiscardedTiles, self.playerDeck)
 
-    self.seconds = 4
-    self.dt = 0
-    self.countdown = false
+    self.countdown = Countdown(6)
     
 end
 
 function oppoAIDiscardState:update(dt)
 
-    self.oppoAIDeck:update(dt)
     self.oppoAIBehaviour:update(dt)
-
-    if self.countdown then
-        self.dt = self.dt + dt
-        if self.dt >= 1 then 
-            self.dt = 0 
-            self.seconds = self.seconds - 1
-        end
-    end
+    self.countdown:update(dt)
 
     -- draw tile
     if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
@@ -68,9 +63,15 @@ function oppoAIDiscardState:render()
 
     self.menu:render()
 
-    Timer.after(1, function()
+    -- renders countdown timer and selectionmenu
+    if self.countdown.visible == true then
 
-        self.playerDecision = not self.playerDecision
+        if self.playerDeck.canPong then self.selectionBoxforPlayerPong:render() self.countdown:render("Pong?") end
+        if self.playerDeck.canKang then self.selectionBoxforPlayerKang:render() self.countdown:render("Kang?") end
+
+    end
+
+    Timer.after(1, function()
 
         -- discard one tile
         x_pos = self.oppoAIBehaviour:determineTiletoDiscard()
@@ -84,20 +85,34 @@ function oppoAIDiscardState:render()
         -- 1. If LeftAI can win
         -- 2. If Player can win
         -- 3. If RightAI can win
-        -- 4. If LeftAI can pong
-        -- 5. If Player can pong
+        -- 4. If LeftAI can pong / kang
+        -- 5. If Player can pong / kang
         if self.playerDeck.canPong then
+
             gSounds['bell']:play()
             self.menu["PongUI"]["available"] = 1
-            self.countdown = not self.countdown
-            selectionBox(3, 3, {1, 1}, 1):render()
-            if self.seconds == 0 then
-                self.countdown = not self.countdown
+            self.countdown.visible = true
+
+            if self.countdown.seconds == 0 then
+                self.countdown.visible = false
                 self.menu["PongUI"]["available"] = 0
                 self.playerDeck.canPong = not self.playerDeck.canPong
                 self.oppoAIBehaviour:goDrawState(self.tileColor, self.jokerstring, self.drawWall, {self.playerDeck, self.rightAIDeck, self.oppoAIDeck, self.leftAIDeck}, {self.playerDiscardedTiles, self.rightDiscardedTiles, self.oppoDiscardedTiles, self.leftDiscardedTiles}) 
             end
-        -- 6. If RightAI can pong
+
+        elseif self.playerDeck.canKang then
+
+            gSounds['bell']:play()
+            self.menu["KangUI"]["available"] = 1
+            self.countdown.visible = true
+
+            if self.countdown.seconds == 0 then
+                self.countdown.visible = false
+                self.menu["KangUI"]["available"] = 0
+                self.playerDeck.canKang = not self.playerDeck.canKang
+                self.oppoAIBehaviour:goDrawState(self.tileColor, self.jokerstring, self.drawWall, {self.playerDeck, self.rightAIDeck, self.oppoAIDeck, self.leftAIDeck}, {self.playerDiscardedTiles, self.rightDiscardedTiles, self.oppoDiscardedTiles, self.leftDiscardedTiles}) 
+            end
+        -- 6. If RightAI can pong / kang
         -- 7. If LeftAI can chi
         -- 8. OppoAi discards goes to LeftAIDrawState
         else
@@ -107,15 +122,6 @@ function oppoAIDiscardState:render()
         end
 
     end)
-
-    if self.countdown then
-        Timer.every(1, function()
-            self.seconds = self.seconds - 1
-        end)
-        love.graphics.setColor(0, 0, 0, 1)
-        love.graphics.printf(self.seconds, VIRTUAL_WIDTH * 0.5, VIRTUAL_HEIGHT * 0.5, VIRTUAL_WIDTH * 0.5, "left")
-        print(self.seconds)
-    end
 
     -- reset the color
     love.graphics.setColor(1, 1, 1, 1)
