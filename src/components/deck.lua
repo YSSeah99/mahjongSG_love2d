@@ -10,6 +10,8 @@ Deck = Class{}
 function Deck:init(hands, flowerWall, areas)
 
     self.hands = hands
+    self.handsCount = 13
+    
     self.flowerWall = flowerWall
     self.areas = areas
 
@@ -22,7 +24,7 @@ end
 function Deck:update(dt)
 
     self:checkFlower()
-    self:sortThirteen()
+    self:sortDeck()
     
 end
 
@@ -32,9 +34,9 @@ function Deck:render()
 
 end
 
-function Deck:sortThirteen()
+function Deck:sortDeck()
     
-    if #self.hands == 13 then
+    if #self.hands == self.handsCount then
         table.sort(self.hands, function (t1, t2) return t1.id < t2.id end)
         -- assign pos in hands after it is sorted
         for pos = 1, #self.hands do
@@ -67,7 +69,7 @@ end
 -- user decides to draw
 function Deck:drawTile(draws)
 
-    while (#self.hands ~= 14) do
+    while (#self.hands ~= self.handsCount + 1) do
         gSounds['tile-draw']:play()
         draws[1].area = self.areas[1]
         draws[1].position = 14
@@ -81,7 +83,7 @@ end
 -- user decides to discard
 function Deck:discardTile(posi, trash)
 
-    if (#self.hands == 14) then
+    if (#self.hands == self.handsCount + 1) then
 
         gSounds['tile-discard']:play()
 
@@ -92,7 +94,7 @@ function Deck:discardTile(posi, trash)
         -- re-adjust playerHand
         table.remove(self.hands, posi)
 
-        self:sortThirteen()
+        self:sortDeck()
 
     end
 

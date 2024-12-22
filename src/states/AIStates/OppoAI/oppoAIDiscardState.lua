@@ -96,6 +96,7 @@ function oppoAIDiscardState:render()
         if self.playerDeck.canPong then
 
             gSounds['bell']:play()
+            Timer.after(gSounds['bell']:getDuration(), function() gSounds['bell']:stop() end)
             self.menu["PongUI"]["available"] = 1
             self.countdown.visible = true
 
@@ -109,6 +110,7 @@ function oppoAIDiscardState:render()
         elseif self.playerDeck.canKang then
 
             gSounds['bell']:play()
+            Timer.after(gSounds['bell']:getDuration(), function() gSounds['bell']:stop() end)
             self.menu["KangUI"]["available"] = 1
             self.countdown.visible = true
 
