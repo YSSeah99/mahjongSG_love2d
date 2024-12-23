@@ -46,6 +46,8 @@ function PlayerDrawState:update(dt)
         local x_pos, y_pos = self.selectionBox:returnCords()
         if x_pos == 1 and y_pos == 3 then
 
+            self.playerDeck:drawTile(self.drawWall)
+
             gStateMachine:change('playerDiscard',
             {
                 tileColor = self.tileColor,

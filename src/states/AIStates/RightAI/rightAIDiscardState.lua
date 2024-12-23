@@ -51,7 +51,18 @@ function rightAIDiscardState:update(dt)
             self.selectionBoxforPlayerPong:update(dt) 
             if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
                 local x, y = self.selectionBoxforPlayerPong:returnCords()
-                print(x, y)
+                if x == 3 and y == 3 then
+                    self.playerDeck:PongTile(self.discardedTile)
+                    self.countdown.visible = false
+                    gStateMachine:change('playerDiscard',
+                    {
+                        tileColor = self.tileColor,
+                        jokerstring = self.jokerstring,
+                        drawWall = self.drawWall,
+                        decks = {self.playerDeck, self.rightAIDeck, self.oppoAIDeck, self.leftAIDeck},
+                        discardedTiles = {self.playerDiscardedTiles, self.rightDiscardedTiles, self.oppoDiscardedTiles, self.leftDiscardedTiles}
+                    })
+                end
             end 
         elseif self.playerDeck.canKang then 
             self.selectionBoxforPlayerKang:render(dt) 

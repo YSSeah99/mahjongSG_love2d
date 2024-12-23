@@ -10,14 +10,15 @@ Deck = Class{}
 function Deck:init(hands, flowerWall, areas)
 
     self.hands = hands
-    self.handsCount = 13
-    
+
     self.flowerWall = flowerWall
     self.areas = areas
 
     self.needtoDraw = false
     self.canPong = false
     self.canKang = false
+
+    self.shift = 0
 
 end
 
@@ -26,16 +27,13 @@ function Deck:update(dt)
     self:checkFlower()
     self:sortDeck()
 
-    -- draw tile
-    if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+    self.handsCount = 13 - self.shift
 
-    end 
-    
 end
 
 function Deck:render()
     
-    playerHandGUI(self.hands, self.flowerWall):render()
+    playerHandGUI(self.hands, self.flowerWall, self.shift):render()
 
 end
 
@@ -90,14 +88,20 @@ function Deck:discardTile(posi, trash)
 
     if (#self.hands == self.handsCount + 1) then
 
+        local discardTile = {}
+        table.insert(discardTile, self.hands[posi])
         gSounds['tile-discard']:play()
 
-        self.hands[posi].area = self.areas[3]
-        table.insert(trash, self.hands[posi])
-        self.hands[posi].position = #trash
+        if table.getn(discardTile) == 1 then
+
+            discardTile[1].area = self.areas[3]
+            table.insert(trash, discardTile[1])
+            discardTile[1].position = #trash
         
-        -- re-adjust playerHand
-        table.remove(self.hands, posi)
+            -- re-adjust playerHand
+            table.remove(self.hands, posi)
+        
+        end
 
         self:sortDeck()
 
@@ -115,7 +119,42 @@ function Deck:checkPongKang(discardedTile)
             end
         end
 
-        if count == 2 then self.canPong = true elseif count == 1 then self.canKang = true end -- to change count back to 2
+        if count == 2 then self.canPong = true elseif count == 3 then self.canKang = true end -- to change count back to 2
+            
+    end
+
+end
+
+--> remove the 2 tiles (+ discardedTile)
+function Deck:PongTile(discardedTile)
+
+    self.discardedTile = discardedTile
+
+    if self.canPong then
+
+        -- insert 3 tiles into flowerDeck
+        for i = 1, 3 do
+            table.insert(self.flowerWall, Tile {
+                id = self.discardedTile.id,
+                tile_colour = self.discardedTile.tile_colour,
+                area = 2,
+                position = #self.flowerWall + 1
+            })
+        end
+
+        -- finds the tiles in playerHand and deletes
+        local pos = {}
+        for p = 1, #self.hands do
+            if self.hands[p].id == self.discardedTile.id and table.getn(pos) ~= 2 then
+                table.insert(pos, p)
+            end
+        end
+        for p = 1, #pos do
+            table.remove(self.hands, pos[#pos - p + 1])
+        end
+
+        self.shift = self.shift + 3
+        self.canPong = false
             
     end
 

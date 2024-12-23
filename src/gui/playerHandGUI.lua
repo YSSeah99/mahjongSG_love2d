@@ -4,10 +4,12 @@
 
 playerHandGUI = Class{}
 
-function playerHandGUI:init(hand, flowerWall)
+function playerHandGUI:init(hand, flowerWall, shift)
 
     self.hand = hand
     self.flowerWall = flowerWall
+
+    self.shift = shift
 
 end
 
@@ -18,8 +20,9 @@ end
 
 function playerHandGUI:render()
 
-    -- print(dump(self.hand))
+    print(dump(self.hand))
     for p = 1, #self.hand do
+        self.hand[p].position = p + self.shift
         self.hand[p]:render()
     end
 
@@ -28,7 +31,5 @@ function playerHandGUI:render()
             self.flowerWall[#self.flowerWall - q + 1]:render()
         end
     end
-
-    --print(dump(self.flowerWall))
 
 end

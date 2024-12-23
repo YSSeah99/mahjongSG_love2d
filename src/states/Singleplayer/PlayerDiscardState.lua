@@ -26,9 +26,6 @@ function PlayerDiscardState:enter(params)
     self.playerDeck, self.rightAIDeck, self.oppoAIDeck, self.leftAIDeck = params.decks[1], params.decks[2], params.decks[3], params.decks[4]
     self.playerDiscardedTiles, self.rightDiscardedTiles, self.oppoDiscardedTiles, self.leftDiscardedTiles = params.discardedTiles[1], params.discardedTiles[2], params.discardedTiles[3], params.discardedTiles[4]
 
-    -- draws tile until playerHand = 14
-    self.playerDeck:drawTile(self.drawWall)
-
 end
 
 function PlayerDiscardState:update(dt)
