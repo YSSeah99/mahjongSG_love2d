@@ -9,16 +9,24 @@ function Countdown:init(time)
     self.seconds = time
     self.dt = 0
 
-    self.visible = 'false'
+    self.visible = false
 
 end
 
 function Countdown:update(dt)
 
-    self.dt = self.dt + dt
-    if self.dt >= 1 then
-        self.seconds = self.seconds - 1
-        self.dt = 0
+    if self.visible == true then
+
+        self.dt = self.dt + dt
+        if self.dt >= 1 then
+            self.seconds = self.seconds - 1
+            self.dt = 0
+        end
+
+    else
+
+        self.seconds = -1
+
     end
 
 end
@@ -27,7 +35,7 @@ function Countdown:render(input, discardedTile)
 
     self.discardedTile = discardedTile
 
-    if self.visible and self.discardedTile ~= nil then
+    if self.visible == true and self.discardedTile ~= nil then
 
         -- menu translucent rounded rectangle
         love.graphics.setColor(1, 1, 1, 0.25)

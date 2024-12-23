@@ -12,6 +12,8 @@ PlayerDrawState = Class{__includes = BaseState}
 
 function PlayerDrawState:init(tileColor, jokerstring, drawWall, decks, discardedTiles)
 
+    self.bg = bgGUI()
+
     self.selectionBox = selectionBox(1, 3, {13, 1}, 3)
     self.menu = playerGUI({0, 0, 0, 0, 0})
 
@@ -27,7 +29,7 @@ function PlayerDrawState:enter(params)
     self.playerDiscardedTiles, self.rightDiscardedTiles, self.oppoDiscardedTiles, self.leftDiscardedTiles = params.discardedTiles[1], params.discardedTiles[2], params.discardedTiles[3], params.discardedTiles[4]
     
     --draws tile until playerHand = 13
-    if #self.playerDeck.hands < 13 then
+    if #self.playerDeck.hands < self.playerDeck.handsCount then
         gSounds['tile-draw']:play()
         self.drawWall[1].area = 1
         table.insert(self.playerDeck.hands, self.drawWall[1])
@@ -37,6 +39,8 @@ function PlayerDrawState:enter(params)
 end
 
 function PlayerDrawState:update(dt)
+
+    self.bg:update(dt)
 
     self.playerDeck:update(dt)
     self.selectionBox:update(dt)
@@ -64,9 +68,7 @@ end
 function PlayerDrawState:render()
 
     -- background
-    love.graphics.draw(gTextures['background'], 0, 0, 0, 
-        VIRTUAL_WIDTH / gTextures['background']:getWidth(),
-        VIRTUAL_HEIGHT / gTextures['background']:getHeight())
+    self.bg:render()
 
     self.playerDeck:render()
     AIHandGUI(self.rightAIDeck.hands, self.oppoAIDeck.hands, self.leftAIDeck.hands):render()

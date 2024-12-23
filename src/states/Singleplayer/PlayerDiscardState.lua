@@ -11,6 +11,8 @@
 PlayerDiscardState = Class{__includes = BaseState}
 
 function PlayerDiscardState:init(tileColor, jokerstring, drawWall, decks, discardedTiles)
+
+    self.bg = bgGUI()
     
     self.menu = playerGUI({0, 0, 0, 0, 0})
     self.selectionBox = selectionBox(14, 2, {14, 1}, 2)
@@ -29,6 +31,8 @@ function PlayerDiscardState:enter(params)
 end
 
 function PlayerDiscardState:update(dt)
+
+    self.bg:update(dt)
 
     self.playerDeck:update(dt)
     self.selectionBox:update(dt)
@@ -59,9 +63,7 @@ function PlayerDiscardState:render()
     -- need to check for winning condition!!!
 
     -- background
-    love.graphics.draw(gTextures['background'], 0, 0, 0, 
-        VIRTUAL_WIDTH / gTextures['background']:getWidth(),
-        VIRTUAL_HEIGHT / gTextures['background']:getHeight())
+    self.bg:render()
 
     self.playerDeck:render()
     AIHandGUI(self.rightAIDeck.hands, self.oppoAIDeck.hands, self.leftAIDeck.hands):render()

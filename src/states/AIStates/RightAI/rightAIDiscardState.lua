@@ -11,6 +11,8 @@
 rightAIDiscardState = Class{__includes = BaseState}
 
 function rightAIDiscardState:init(tileColor, jokerstring, drawWall, decks, discardedTiles)
+
+    self.bg = bgGUI()
     
     self.menu = playerGUI({0, 0, 0, 0, 0})
     self.discardedTile = nil
@@ -44,6 +46,8 @@ function rightAIDiscardState:update(dt)
     self.rightAIBehaviour:update(dt)
     self.countdown:update(dt)
 
+    self.bg:update(dt)
+
     -- awaits for enter
     if self.countdown.visible == true then
 
@@ -51,7 +55,7 @@ function rightAIDiscardState:update(dt)
             self.selectionBoxforPlayerPong:update(dt) 
             if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
                 local x, y = self.selectionBoxforPlayerPong:returnCords()
-                if x == 3 and y == 3 then
+                if x == 3 then
                     self.playerDeck:PongTile(self.discardedTile)
                     self.countdown.visible = false
                     gStateMachine:change('playerDiscard',
@@ -81,9 +85,7 @@ function rightAIDiscardState:render()
     -- need to check for winning condition!!!
 
     -- background
-    love.graphics.draw(gTextures['background'], 0, 0, 0, 
-        VIRTUAL_WIDTH / gTextures['background']:getWidth(),
-        VIRTUAL_HEIGHT / gTextures['background']:getHeight())
+    self.bg:render()
 
     self.playerDeck:render()
     AIHandGUI(self.rightAIDeck.hands, self.oppoAIDeck.hands, self.leftAIDeck.hands):render()

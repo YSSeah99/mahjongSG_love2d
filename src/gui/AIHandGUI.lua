@@ -28,7 +28,7 @@ function AIHandGUI:render()
     love.graphics.printf(#self.lefthand, VIRTUAL_WIDTH * 0.2, VIRTUAL_HEIGHT * 0.5, VIRTUAL_WIDTH * 0.9, "left")
 
     -- Oppo AI
-    love.graphics.printf(#self.oppohand, VIRTUAL_WIDTH * 0.5, VIRTUAL_HEIGHT * 0.25, VIRTUAL_WIDTH * 0.9, "left")
+    love.graphics.printf(#self.oppohand, VIRTUAL_WIDTH * 0.5, VIRTUAL_HEIGHT * 0.275, VIRTUAL_WIDTH * 0.9, "left")
 
     -- Right AI
     love.graphics.printf(#self.righthand, VIRTUAL_WIDTH * 0.8, VIRTUAL_HEIGHT * 0.5, VIRTUAL_WIDTH * 0.9, "left")

@@ -18,6 +18,7 @@ require 'src/components/set'
 require 'src/components/AIBehaviour'
 require 'src/components/countdown'
 
+require 'src/gui/bgGUI'
 require 'src/gui/Panel'
 require 'src/gui/playerGUI'
 require 'src/gui/playerchoiceGUI'

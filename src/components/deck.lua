@@ -19,6 +19,7 @@ function Deck:init(hands, flowerWall, areas)
     self.canKang = false
 
     self.shift = 0
+    self.handsCount = 13
 
 end
 
@@ -26,8 +27,6 @@ function Deck:update(dt)
 
     self:checkFlower()
     self:sortDeck()
-
-    self.handsCount = 13 - self.shift
 
 end
 
@@ -73,6 +72,7 @@ end
 function Deck:drawTile(draws)
 
     while (#self.hands ~= self.handsCount + 1) do
+        print(#self.hands, self.handsCount + 1)
         gSounds['tile-draw']:play()
         draws[1].area = self.areas[1]
         draws[1].position = 14
@@ -154,7 +154,10 @@ function Deck:PongTile(discardedTile)
         end
 
         self.shift = self.shift + 3
+        self.handsCount = self.handsCount - 3
         self.canPong = false
+
+        print(self.shift, self.handsCount)
             
     end
 

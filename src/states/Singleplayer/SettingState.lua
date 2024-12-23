@@ -5,6 +5,9 @@
 SettingState = Class{__includes = BaseState}
 
 function SettingState:init()
+
+    self.bg = bgGUI()
+
     minFan = 1
     maxFan = 5
     tileColor = 7
@@ -16,10 +19,9 @@ function SettingState:init()
 end
 
 function SettingState:update(dt)
-    if love.keyboard.wasPressed('escape') then
-        love.event.quit()
-    end
 
+    self.bg:update(dt)
+    
     highlighted = highlighted % 5
 
     -- toggle highlighted option if we press an arrow key up or down
@@ -92,10 +94,8 @@ function SettingState:update(dt)
 end
 
 function SettingState:render()
-    -- background
-    love.graphics.draw(gTextures['background'], 0, 0, 0, 
-        VIRTUAL_WIDTH / gTextures['background']:getWidth(),
-        VIRTUAL_HEIGHT / gTextures['background']:getHeight())
+
+    self.bg:render()
 
     -- menu translucent rounded rectangle
     love.graphics.setColor(1, 1, 1, 0.25)

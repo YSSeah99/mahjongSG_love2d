@@ -20,7 +20,7 @@ end
 
 function playerHandGUI:render()
 
-    print(dump(self.hand))
+    --print(dump(self.hand))
     for p = 1, #self.hand do
         self.hand[p].position = p + self.shift
         self.hand[p]:render()
