@@ -35,7 +35,7 @@ function leftAIDiscardState:enter(params)
 
     self.leftAIBehaviour = AIBehaviour('left', self.leftAIDeck, self.leftDiscardedTiles, self.playerDeck)
 
-    self.countdown = Countdown(6)
+    self.countdown = Countdown(4)
     
 end
 
@@ -44,9 +44,24 @@ function leftAIDiscardState:update(dt)
     self.leftAIBehaviour:update(dt)
     self.countdown:update(dt)
 
-    -- draw tile
-    if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
-    end 
+    -- awaits for enter
+    if self.countdown.visible == true then
+
+        if self.playerDeck.canPong then 
+            self.selectionBoxforPlayerPong:update(dt) 
+            if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+                local x, y = self.selectionBoxforPlayerPong:returnCords()
+                print(x, y)
+            end 
+        elseif self.playerDeck.canKang then 
+            self.selectionBoxforPlayerKang:render(dt) 
+            if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+                local x, y = self.selectionBoxforPlayerKang:returnCords()
+                print(x, y)
+            end 
+        end
+
+    end
 
 end
 

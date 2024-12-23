@@ -25,7 +25,7 @@ function playerHandGUI:render()
 
     if self.flowerWall ~= nil then
         for q = 1, #self.flowerWall do
-            self.flowerWall[q]:render()
+            self.flowerWall[#self.flowerWall - q + 1]:render()
         end
     end
 

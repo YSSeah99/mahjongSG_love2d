@@ -25,6 +25,11 @@ function Deck:update(dt)
 
     self:checkFlower()
     self:sortDeck()
+
+    -- draw tile
+    if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+
+    end 
     
 end
 

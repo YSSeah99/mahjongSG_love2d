@@ -66,17 +66,17 @@ function Tile:render()
 
         love.graphics.draw(gTextures['tiles_colour'], 
         gFrames['tiles_colour'][self.tile_colour[1]],
-        VIRTUAL_WIDTH * 0.9 - ((26 - self.position) * (TILE_WIDTH * 0.6)),
+        VIRTUAL_WIDTH * 0.8 - ((16 - self.position) * (TILE_WIDTH * 0.85)),
         VIRTUAL_HEIGHT * 0.7, 
         math.rad(180), 
-        0.09, 0.09) -- scaling for hand
+        0.14, 0.14) -- scaling for hand
 
         love.graphics.draw(gTextures['tiles'], 
         gFrames['tiles'][self.id],
-        VIRTUAL_WIDTH * 0.906 - ((27 - self.position) * (TILE_WIDTH * 0.6)),
-        VIRTUAL_HEIGHT * 0.632, 
+        VIRTUAL_WIDTH * 0.805 - ((17 - self.position) * (TILE_WIDTH * 0.85)),
+        VIRTUAL_HEIGHT * 0.595, 
         0, 
-        0.085, 0.085)  -- scaling for hand
+        0.14, 0.14)  -- scaling for hand
     
     -- displays when pong
     elseif self.choice == 2 then
